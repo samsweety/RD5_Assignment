@@ -1,0 +1,25 @@
+create database bank;
+use bank;
+create table account(
+    aid int auto_increment primary key,
+    userName varchar(20) not null,
+    pw varchar(20) not null,
+    cash int default 0
+);
+
+insert into account (userName,pw,cash) values ("sam","1234",25000),("ahri","kda55688",350000),("hades","42069",1500);
+
+create table accDetail(
+    adid int auto_increment primary key,
+    aid int not null,
+    operate int not null,
+    amount int not null,
+    ts timestamp default current_timestamp
+);
+
+alter table accDetail add constraint fk_accD_acc foreign key(aid) references account(aid)
+on delete cascade
+on update cascade
+;
+
+insert into accDetail (aid,operate,amount) values (1,1,25000),(2,1,350000),(3,1,1500);
