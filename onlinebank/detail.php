@@ -11,8 +11,6 @@
             $_SESSION["hide"]=1;
         }
     }
-    
- 
 ?>
 
 <?php
@@ -20,7 +18,7 @@
     mysqli_query($link,"set names utf-8");
     $aid=$_SESSION["aid"];
     $sqldetail=<<<sql
-            select * from accDetail where aid=$aid;
+            select * from accDetail where aid=$aid order by ts desc;
         sql;
     $resultDetail=mysqli_query($link,$sqldetail);
   $money="";
@@ -28,7 +26,6 @@
         header("location:login.php");
         exit();
     }else{
-        $aid=$_SESSION["aid"];
         $sql=<<<sql
                 select cash from account where aid="$aid";
             sql;
@@ -95,9 +92,9 @@
         <?php for(;$row=mysqli_fetch_assoc($resultDetail);){?>
         <tr>
             <?php if($row["operate"]==1){?>
-                <td><?= "存款"?></td>
+                <td style="color:red"><?= "存款"?></td>
             <?php }else{?>
-                <td><?= "提款"?></td>
+                <td style="color:green"><?= "提款"?></td>
             <?php }?>
             <td><?= $row["amount"]?></td>
             <td><?= $row["ts"]?></td>

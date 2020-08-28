@@ -31,11 +31,11 @@
   $link=mysqli_connect("localhost","root","root","bank");
   mysqli_query($link,"set names utf-8");
   $money="";
+  $aid=$_SESSION["aid"];
   if(!isset($_SESSION["userName"])){
         header("location:login.php");
         exit();
     }else{
-        $aid=$_SESSION["aid"];
         $sql=<<<sql
                 select cash from account where aid="$aid";
             sql;

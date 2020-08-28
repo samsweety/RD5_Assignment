@@ -19,19 +19,36 @@
     $link=mysqli_connect("localhost","root","root","bank");
     mysqli_query($link,"set names utf-8");
     $aid=$_SESSION["aid"];
-  $money="";
-  if(!isset($_SESSION["userName"])){
-        header("location:login.php");
-        exit();
-    }else{
-        $aid=$_SESSION["aid"];
+    $money="";    
+    if(isset($_POST["btnOK"])){
+      if(!is_numeric($_POST["amount"])){
+        echo "輸入的值並非數字";
+      }else if($_POST["amount"]<1){
+        echo "輸入的值小於一";
+      }else{
+        $amount=$_POST["amount"];        
         $sql=<<<sql
-                select cash from account where aid="$aid";
-            sql;
-        $result=mysqli_query($link,$sql);
-        $row=mysqli_fetch_assoc($result);
-        $money=$row["cash"];
- }
+          update account set cash=cash+$amount where aid=$aid;
+          sql;
+        mysqli_query($link,$sql);
+        $sql=<<<sql
+          insert into accDetail (aid,operate,amount) values ($aid,1,$amount);
+          sql;
+        mysqli_query($link,$sql);
+      }
+    }
+
+    if(!isset($_SESSION["userName"])){
+          header("location:login.php");
+          exit();
+      }else{
+          $sql=<<<sql
+                  select cash from account where aid="$aid";
+              sql;
+          $result=mysqli_query($link,$sql);
+          $row=mysqli_fetch_assoc($result);
+          $money=$row["cash"];
+  }
 ?>
 
 

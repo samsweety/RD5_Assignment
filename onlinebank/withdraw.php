@@ -19,18 +19,45 @@
     $link=mysqli_connect("localhost","root","root","bank");
     mysqli_query($link,"set names utf-8");
     $aid=$_SESSION["aid"];
-  $money="";
-  if(!isset($_SESSION["userName"])){
-        header("location:login.php");
-        exit();
+    $money="";
+    $sql=<<<sql
+          select cash from account where aid="$aid";
+      sql;
+    $result=mysqli_query($link,$sql);
+    $row=mysqli_fetch_assoc($result);
+    $money=$row["cash"];
+    if(isset($_POST["btnOK"])){
+      $amount=$_POST["amount"];
+      if(!is_numeric($_POST["amount"])){
+        echo "輸入的值並非數字";
+      }else if($_POST["amount"]<1){
+        echo "輸入的值小於一";
+      }else if($amount>$money){
+        echo "餘額不足";
+      }else{
+      $sql=<<<sql
+          update account set cash=cash-$amount where aid=$aid;
+        sql;
+      mysqli_query($link,$sql);
+      $sql=<<<sql
+          insert into accDetail (aid,operate,amount) values ($aid,2,$amount);
+        sql;
+      mysqli_query($link,$sql);
+      }
+    }
+
+
+
+    if(!isset($_SESSION["userName"])){
+      header("location:login.php");
+      exit();
     }else{
-        $aid=$_SESSION["aid"];
-        $sql=<<<sql
-                select cash from account where aid="$aid";
-            sql;
-        $result=mysqli_query($link,$sql);
-        $row=mysqli_fetch_assoc($result);
-        $money=$row["cash"];
+      $sql=<<<sql
+              select cash from account where aid="$aid";
+          sql;
+      $result=mysqli_query($link,$sql);
+      $row=mysqli_fetch_assoc($result);
+      $money=$row["cash"];
  }
 ?>
 
@@ -79,12 +106,20 @@
         <input type="submit" name="hide" class="btn-warning" value="<?= (isset($_SESSION["hide"]))?"顯示餘額":"隱藏餘額"?>">
         </th>
         </form>
-        <th style="text-align:right"></th>
       </tr>
     </thead>    
     <tbody>
-        
-       
+        <tr>
+            <td>提款金額</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr><form method="post">
+            <td><input type="text" name="amount" ></td>
+            <td><input type="submit" name="btnOK" class="btn-success" value="確認"></td>
+            <td></td>
+            </form>
+        </tr>
     </tbody>
     
   </table>
