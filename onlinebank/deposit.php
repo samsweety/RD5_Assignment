@@ -16,7 +16,7 @@
 ?>
 
 <?php
-    $link=mysqli_connect("localhost","root","root","bank");
+    $link=mysqli_connect("localhost","sam","55688","bank");
     mysqli_query($link,"set names utf-8");
     $aid=$_SESSION["aid"];
     $money="";    
