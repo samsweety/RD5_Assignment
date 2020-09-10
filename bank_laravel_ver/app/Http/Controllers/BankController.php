@@ -9,6 +9,11 @@ use App\Http\Requests\BankRequest;
 
 class BankController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function deposit()
     {
         return view('deposit');
